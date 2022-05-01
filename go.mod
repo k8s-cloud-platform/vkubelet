@@ -11,7 +11,6 @@ require (
 	github.com/virtual-kubelet/virtual-kubelet v1.6.0
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
 	k8s.io/api v0.23.6
-	k8s.io/apiextensions-apiserver v0.19.2
 	k8s.io/apimachinery v0.23.6
 	k8s.io/client-go v0.23.6
 	k8s.io/klog v1.0.0
