@@ -26,7 +26,6 @@ import (
 	"github.com/virtual-kubelet/node-cli/opts"
 	"github.com/virtual-kubelet/node-cli/provider"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apiextensions-apiserver/examples/client-go/pkg/client/clientset/versioned"
 	"k8s.io/apimachinery/pkg/api/resource"
 	kubeinformers "k8s.io/client-go/informers"
 	informerv1 "k8s.io/client-go/informers/core/v1"
@@ -35,6 +34,7 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog"
+	"k8s.io/metrics/pkg/client/clientset/versioned"
 
 	"github.com/k8s-cloud-platform/vkubelet/pkg/common"
 	"github.com/k8s-cloud-platform/vkubelet/pkg/util"

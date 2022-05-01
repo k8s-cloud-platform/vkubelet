@@ -18,7 +18,6 @@ package util
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	resourcehelper "k8s.io/kubernetes/pkg/api/v1/resource"
 
 	"github.com/k8s-cloud-platform/vkubelet/pkg/common"
 )
@@ -28,7 +27,7 @@ func GetRequestFromPod(pod *corev1.Pod) *common.Resource {
 	if pod == nil {
 		return nil
 	}
-	reqs, _ := resourcehelper.PodRequestsAndLimits(pod)
+	reqs, _ := common.PodRequestsAndLimits(pod)
 	capacity := common.ConvertResource(reqs)
 	return capacity
 }

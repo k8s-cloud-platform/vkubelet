@@ -20,6 +20,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/virtual-kubelet/virtual-kubelet/node/api/statsv1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,8 +30,8 @@ import (
 )
 
 // GetStatsSummary summaries the cluster metrics which represented by the provider
-func (v *VirtualK8S) GetStatsSummary(ctx context.Context) (*stats.Summary, error) {
-	var summary stats.Summary
+func (v *VirtualK8S) GetStatsSummary(ctx context.Context) (*statsv1alpha1.Summary, error) {
+	var summary statsv1alpha1.Summary
 	selector := labels.SelectorFromSet(map[string]string{
 		util.VirtualPodLabel: "true"},
 	)
@@ -52,14 +53,14 @@ func (v *VirtualK8S) GetStatsSummary(ctx context.Context) (*stats.Summary, error
 			time = podStats.StartTime.Time
 		}
 	}
-	summary.Node = stats.NodeStats{
+	summary.Node = statsv1alpha1.NodeStats{
 		NodeName:  v.providerNode.Name,
 		StartTime: v1.Time{Time: time},
-		CPU: &stats.CPUStats{
+		CPU: &statsv1alpha1.CPUStats{
 			Time:           v1.Time{Time: time},
 			UsageNanoCores: &cpuAll,
 		},
-		Memory: &stats.MemoryStats{
+		Memory: &statsv1alpha1.MemoryStats{
 			Time:            v1.Time{Time: time},
 			WorkingSetBytes: &memoryAll,
 		},
