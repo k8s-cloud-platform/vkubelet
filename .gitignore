@@ -13,3 +13,13 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+.DS_Store
+.idea
+vendor
+
+bin
+hack/tools/bin
+
+apiserver.local.config
+*.yaml-e
