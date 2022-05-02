@@ -21,8 +21,8 @@ import (
 	"time"
 
 	gochache "github.com/patrickmn/go-cache"
-	v1 "k8s.io/api/core/v1"
-	"k8s.io/klog"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/klog/v2"
 )
 
 // UnschedulableCache contaiens cache ownerid/node/freezeTime
@@ -85,20 +85,20 @@ type CheckValidFunc func(string, string, time.Duration) bool
 // ReplacePodNodeNameNodeAffinity replaces the RequiredDuringSchedulingIgnoredDuringExecution
 // NodeAffinity of the given affinity with a new NodeAffinity that selects the given nodeName.
 // Note that this function assumes that no NodeAffinity conflicts with the selected nodeName.
-func ReplacePodNodeNameNodeAffinity(affinity *v1.Affinity, ownerID string, expireTime time.Duration,
-	checkFuc CheckValidFunc, nodeNames ...string) (*v1.Affinity,
+func ReplacePodNodeNameNodeAffinity(affinity *corev1.Affinity, ownerID string, expireTime time.Duration,
+	checkFuc CheckValidFunc, nodeNames ...string) (*corev1.Affinity,
 	int) {
-	nodeSelReq := v1.NodeSelectorRequirement{
+	nodeSelReq := corev1.NodeSelectorRequirement{
 		// Key:      "metadata.name",
 		Key:      "kubernetes.io/hostname",
-		Operator: v1.NodeSelectorOpNotIn,
+		Operator: corev1.NodeSelectorOpNotIn,
 		Values:   nodeNames,
 	}
 
-	nodeSelector := &v1.NodeSelector{
-		NodeSelectorTerms: []v1.NodeSelectorTerm{
+	nodeSelector := &corev1.NodeSelector{
+		NodeSelectorTerms: []corev1.NodeSelectorTerm{
 			{
-				MatchExpressions: []v1.NodeSelectorRequirement{nodeSelReq},
+				MatchExpressions: []corev1.NodeSelectorRequirement{nodeSelReq},
 			},
 		},
 	}
@@ -106,15 +106,15 @@ func ReplacePodNodeNameNodeAffinity(affinity *v1.Affinity, ownerID string, expir
 	count := 1
 
 	if affinity == nil {
-		return &v1.Affinity{
-			NodeAffinity: &v1.NodeAffinity{
+		return &corev1.Affinity{
+			NodeAffinity: &corev1.NodeAffinity{
 				RequiredDuringSchedulingIgnoredDuringExecution: nodeSelector,
 			},
 		}, count
 	}
 
 	if affinity.NodeAffinity == nil {
-		affinity.NodeAffinity = &v1.NodeAffinity{
+		affinity.NodeAffinity = &corev1.NodeAffinity{
 			RequiredDuringSchedulingIgnoredDuringExecution: nodeSelector,
 		}
 		return affinity, count
@@ -129,15 +129,15 @@ func ReplacePodNodeNameNodeAffinity(affinity *v1.Affinity, ownerID string, expir
 
 	terms := nodeAffinity.RequiredDuringSchedulingIgnoredDuringExecution.NodeSelectorTerms
 	if terms == nil {
-		nodeAffinity.RequiredDuringSchedulingIgnoredDuringExecution.NodeSelectorTerms = []v1.NodeSelectorTerm{
+		nodeAffinity.RequiredDuringSchedulingIgnoredDuringExecution.NodeSelectorTerms = []corev1.NodeSelectorTerm{
 			{
-				MatchFields: []v1.NodeSelectorRequirement{nodeSelReq},
+				MatchFields: []corev1.NodeSelectorRequirement{nodeSelReq},
 			},
 		}
 		return affinity, count
 	}
 
-	newTerms := make([]v1.NodeSelectorTerm, 0)
+	newTerms := make([]corev1.NodeSelectorTerm, 0)
 	for _, term := range terms {
 		if term.MatchExpressions == nil {
 			continue
@@ -154,9 +154,9 @@ func ReplacePodNodeNameNodeAffinity(affinity *v1.Affinity, ownerID string, expir
 	return affinity, count
 }
 
-func getNodeSelectorRequirement(term v1.NodeSelectorTerm,
-	ownerID string, nodeSelReq v1.NodeSelectorRequirement, checkFuc CheckValidFunc, expireTime time.Duration) ([]v1.NodeSelectorRequirement, int) {
-	mes := make([]v1.NodeSelectorRequirement, 0)
+func getNodeSelectorRequirement(term corev1.NodeSelectorTerm,
+	ownerID string, nodeSelReq corev1.NodeSelectorRequirement, checkFuc CheckValidFunc, expireTime time.Duration) ([]corev1.NodeSelectorRequirement, int) {
+	mes := make([]corev1.NodeSelectorRequirement, 0)
 	count := 0
 	for _, me := range term.MatchExpressions {
 		if me.Key != nodeSelReq.Key || me.Operator != nodeSelReq.Operator {

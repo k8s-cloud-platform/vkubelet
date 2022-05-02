@@ -23,8 +23,9 @@ import (
 	"github.com/virtual-kubelet/virtual-kubelet/node/api/statsv1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/metrics/pkg/apis/metrics/v1beta1"
 
 	"github.com/k8s-cloud-platform/vkubelet/pkg/util"
 )
@@ -36,7 +37,7 @@ func (v *VirtualK8S) GetStatsSummary(ctx context.Context) (*statsv1alpha1.Summar
 		util.VirtualPodLabel: "true"},
 	)
 	metrics, err := v.metricClient.MetricsV1beta1().PodMetricses(corev1.NamespaceAll).List(ctx,
-		v1.ListOptions{
+		metav1.ListOptions{
 			LabelSelector: selector.String(),
 		})
 	if err != nil {
@@ -55,21 +56,21 @@ func (v *VirtualK8S) GetStatsSummary(ctx context.Context) (*statsv1alpha1.Summar
 	}
 	summary.Node = statsv1alpha1.NodeStats{
 		NodeName:  v.providerNode.Name,
-		StartTime: v1.Time{Time: time},
+		StartTime: metav1.Time{Time: time},
 		CPU: &statsv1alpha1.CPUStats{
-			Time:           v1.Time{Time: time},
+			Time:           metav1.Time{Time: time},
 			UsageNanoCores: &cpuAll,
 		},
 		Memory: &statsv1alpha1.MemoryStats{
-			Time:            v1.Time{Time: time},
+			Time:            metav1.Time{Time: time},
 			WorkingSetBytes: &memoryAll,
 		},
 	}
 	return &summary, nil
 }
 
-func convert2PodStats(metric *v1beta1.PodMetrics) *stats.PodStats {
-	stat := &stats.PodStats{}
+func convert2PodStats(metric *v1beta1.PodMetrics) *statsv1alpha1.PodStats {
+	stat := &statsv1alpha1.PodStats{}
 	if metric == nil {
 		return nil
 	}
@@ -77,18 +78,18 @@ func convert2PodStats(metric *v1beta1.PodMetrics) *stats.PodStats {
 	stat.PodRef.Name = metric.Name
 	stat.StartTime = metric.Timestamp
 
-	containerStats := stats.ContainerStats{}
+	containerStats := statsv1alpha1.ContainerStats{}
 	var cpuAll, memoryAll uint64
 	for _, c := range metric.Containers {
 		containerStats.StartTime = metric.Timestamp
 		containerStats.Name = c.Name
 		nanoCore := uint64(c.Usage.Cpu().ScaledValue(resource.Nano))
 		memory := uint64(c.Usage.Memory().Value())
-		containerStats.CPU = &stats.CPUStats{
+		containerStats.CPU = &statsv1alpha1.CPUStats{
 			Time:           metric.Timestamp,
 			UsageNanoCores: &nanoCore,
 		}
-		containerStats.Memory = &stats.MemoryStats{
+		containerStats.Memory = &statsv1alpha1.MemoryStats{
 			Time:            metric.Timestamp,
 			WorkingSetBytes: &memory,
 		}
@@ -96,11 +97,11 @@ func convert2PodStats(metric *v1beta1.PodMetrics) *stats.PodStats {
 		memoryAll += memory
 		stat.Containers = append(stat.Containers, containerStats)
 	}
-	stat.CPU = &stats.CPUStats{
+	stat.CPU = &statsv1alpha1.CPUStats{
 		Time:           metric.Timestamp,
 		UsageNanoCores: &cpuAll,
 	}
-	stat.Memory = &stats.MemoryStats{
+	stat.Memory = &statsv1alpha1.MemoryStats{
 		Time:            metric.Timestamp,
 		WorkingSetBytes: &memoryAll,
 	}

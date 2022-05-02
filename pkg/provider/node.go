@@ -26,7 +26,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 
 	"github.com/k8s-cloud-platform/vkubelet/pkg/common"
 	"github.com/k8s-cloud-platform/vkubelet/pkg/util"

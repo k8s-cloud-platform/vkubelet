@@ -33,7 +33,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/remotecommand"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 
 	"github.com/k8s-cloud-platform/vkubelet/pkg/controllers"
 	"github.com/k8s-cloud-platform/vkubelet/pkg/util"

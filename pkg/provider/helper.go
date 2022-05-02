@@ -20,7 +20,7 @@ import (
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 )
 
 // getSecrets filters the volumes of a pod to get only the secret volumes,

@@ -33,7 +33,7 @@ import (
 	v1 "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 	"k8s.io/metrics/pkg/client/clientset/versioned"
 
 	"github.com/k8s-cloud-platform/vkubelet/pkg/common"

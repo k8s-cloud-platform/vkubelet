@@ -34,7 +34,7 @@ import (
 	kubeinformers "k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 
 	"github.com/k8s-cloud-platform/vkubelet/pkg/controllers"
 	vprovider "github.com/k8s-cloud-platform/vkubelet/pkg/provider"
@@ -49,7 +49,7 @@ var (
 	ignoreLabels         = ""
 	enableControllers    = ""
 	enableServiceAccount = true
-	providerName         = "k8s"
+	providerName         = "kcp"
 )
 
 func main() {

@@ -103,8 +103,8 @@ docker-push: ## Push image.
 
 .PHONY: set-manifest
 set-manifest: ## Update manifest image and pull policy.
-	$(MAKE) set-manifest-image MANIFEST_IMG=$(CONTROLLER_IMG_VKUBELET) MANIFEST_TAG=$(RELEASE_TAG) TARGET_RESOURCE="./deploy/base/vkubelet.yaml"
-	$(MAKE) set-manifest-pull-policy PULL_POLICY=IfNotPresent TARGET_RESOURCE="./deploy/base/vkubelet.yaml"
+	$(MAKE) set-manifest-image MANIFEST_IMG=$(CONTROLLER_IMG_VKUBELET) MANIFEST_TAG=$(RELEASE_TAG) TARGET_RESOURCE="./deploy/vkubelet.yaml"
+	$(MAKE) set-manifest-pull-policy PULL_POLICY=IfNotPresent TARGET_RESOURCE="./deploy/vkubelet.yaml"
 
 .PHONY: set-manifest-pull-policy
 set-manifest-pull-policy: ## Update manifest pull policy.
