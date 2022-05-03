@@ -20,7 +20,7 @@ spec:
             - --kubeconfig=/etc/kubernetes/admin.conf
             - --client-kubeconfig=/etc/kubernetes/admin.conf
             - --provider=kcp
-            - --nodename=test1
+            - --nodename=cluster1
           image: k8scloudplatform/vkubelet:dev
           imagePullPolicy: IfNotPresent
           volumeMounts:
